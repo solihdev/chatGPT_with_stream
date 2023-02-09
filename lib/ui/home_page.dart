@@ -13,10 +13,10 @@ class _HomePageState extends State<HomePage> {
   StreamController<ChatGPTModel> streamController =
       StreamController<ChatGPTModel>.broadcast();
   late StreamSubscription streamSubscription;
-  String text = "";
+
 
   late Stream<ChatGPTModel> stream = createNewUser(
-      ChatGPTModel(questionText: "Salom", createdTime: "", answerText: "Alik"));
+      ChatGPTModel(questionText: "", createdTime: "", answerText: ""));
 
   @override
   void initState() {
@@ -30,13 +30,13 @@ class _HomePageState extends State<HomePage> {
 
   Stream<ChatGPTModel> createNewStream() async* {
     yield ChatGPTModel(
-        answerText: "Qaleysiz", createdTime: "", questionText: "");
-    await Future.delayed(const Duration(seconds: 3));
-    yield ChatGPTModel(
-        answerText: "Yaxshimisiz", createdTime: "", questionText: "");
-    await Future.delayed(const Duration(seconds: 5));
-    yield ChatGPTModel(
-        answerText: "Ahvollar qanday", createdTime: "", questionText: "");
+        answerText: "Alik", createdTime: "", questionText: "Salom");
+    // await Future.delayed(const Duration(seconds: 3));
+    // yield ChatGPTModel(
+    //     answerText: "Yaxshimisiz", createdTime: "", questionText: "");
+    // await Future.delayed(const Duration(seconds: 2));
+    // yield ChatGPTModel(
+    //     answerText: "Ahvollar qanday", createdTime: "", questionText: "");
   }
 
   Stream<ChatGPTModel> createNewUser(ChatGPTModel chatGPTModel) async* {
@@ -45,9 +45,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    String text = "";
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Home Page"),
+        title: const Text("ChatGbt"),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.hasData) {
                   var data = snapshot.data!;
                   return Text(
-                    text == data.questionText
+                    text != data.questionText
                         ? "My answer: ${data.answerText}"
                         : "Matnni kiriting",
                     style: const TextStyle(fontSize: 26),
@@ -73,14 +74,14 @@ class _HomePageState extends State<HomePage> {
                 }
               }),
           Padding(
-            padding: const EdgeInsets.only(left: 50, right: 50, top: 50),
+            padding: const EdgeInsets.only(left: 50, right: 50,top: 100),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     onChanged: (v) {
                       setState(() {
-                        v = text;
+                        v=text;
                       });
                     },
                     keyboardType: TextInputType.text,
@@ -96,8 +97,7 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   onPressed: () {
                     // streamSubscription.pause();
-                    // print(streamSubscription.isPaused);
-                    // streamController.addStream(createNewStream());
+                    streamController.addStream(createNewStream());
                     // streamController.addError("ERRROR");
                   },
                   icon: const Icon(
